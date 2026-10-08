@@ -20,3 +20,7 @@ export const DAY_END_HOUR = 21;
 
 // Longest allowed booking, in days.
 export const MAX_SPAN_DAYS = 31;
+
+// Printed in the "Approved" box of the Meeting Schedule Request Form.
+export const APPROVER_NAME = "ENGR. ALLAN G. CASEM";
+export const APPROVER_TITLE = "General Manager";

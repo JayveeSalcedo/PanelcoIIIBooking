@@ -76,3 +76,26 @@ export function fmtDuration(start: Date, end: Date): string {
   const m = mins % 60;
   return [h && `${h} hr${h > 1 ? "s" : ""}`, m && `${m} min`].filter(Boolean).join(" ") || "0 min";
 }
+
+const longDateFmt = new Intl.DateTimeFormat("en-US", {
+  timeZone: TZ,
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+/** "August 28, 2026 | 9:30 AM – 12:00 PM", as written on the paper form. */
+export function fmtFormRange(start: Date, end: Date): string {
+  if (localDate(start) === localDate(end)) {
+    return `${longDateFmt.format(start)}  |  ${fmtTime(start)} – ${fmtTime(end)}`;
+  }
+  return `${longDateFmt.format(start)} ${fmtTime(start)} – ${longDateFmt.format(end)} ${fmtTime(end)}`;
+}
+
+export function fmtLongDate(d: Date): string {
+  return longDateFmt.format(d);
+}
+
+export function localYear(d: Date): string {
+  return localDate(d).slice(0, 4);
+}

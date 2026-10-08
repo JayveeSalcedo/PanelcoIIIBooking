@@ -55,3 +55,12 @@ body {
 @utility btn-danger {
   @apply btn bg-rose-600 text-white hover:bg-rose-700;
 }
+
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+  body {
+    @apply bg-white;
+  }
+}
