@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        <header className="border-b-4 border-accent-400 bg-brand-800 text-white">
+        <header className="border-b-4 border-accent-400 print:hidden bg-brand-800 text-white">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
             <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
               <span className="inline-block h-3 w-3 rounded-full bg-accent-400" />
@@ -48,7 +48,7 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+        <main className="mx-auto max-w-6xl px-4 py-6 print:max-w-none print:p-0">{children}</main>
       </body>
     </html>
   );
