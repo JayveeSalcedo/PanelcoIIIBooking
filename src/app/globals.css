@@ -5,6 +5,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Brand colors: green primary, yellow accent. Change these to re-theme the app. */
+@theme {
+  --color-brand-50: var(--color-green-50);
+  --color-brand-100: var(--color-green-100);
+  --color-brand-200: var(--color-green-200);
+  --color-brand-500: var(--color-green-500);
+  --color-brand-600: var(--color-green-600);
+  --color-brand-700: var(--color-green-700);
+  --color-brand-800: var(--color-green-800);
+  --color-brand-900: var(--color-green-900);
+  --color-accent-300: var(--color-yellow-300);
+  --color-accent-400: var(--color-yellow-400);
+  --color-accent-500: var(--color-yellow-500);
+}
+
 body {
   @apply bg-zinc-50 text-zinc-900;
 }
@@ -18,7 +33,7 @@ body {
 }
 
 @utility input {
-  @apply w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-zinc-100;
+  @apply w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-accent-300 disabled:bg-zinc-100;
 }
 
 @utility btn {
@@ -26,7 +41,7 @@ body {
 }
 
 @utility btn-primary {
-  @apply btn bg-blue-600 text-white hover:bg-blue-700;
+  @apply btn bg-brand-700 text-white hover:bg-brand-800;
 }
 
 @utility btn-secondary {

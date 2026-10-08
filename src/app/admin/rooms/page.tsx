@@ -16,7 +16,7 @@ export default async function RoomsPage({ searchParams }: { searchParams: Promis
           Leave capacity blank if unknown — no capacity check is applied. Inactive rooms are hidden from the request form.
         </p>
       </div>
-      {msg && <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-900">{msg}</div>}
+      {msg && <div className="rounded-lg border border-brand-200 bg-brand-50 px-4 py-2 text-sm text-brand-900">{msg}</div>}
       <div className="space-y-2">
         {rooms.map((r) => <RoomRow key={r.id} room={r} />)}
         <h2 className="pt-4 text-sm font-semibold text-zinc-700">Add a room</h2>

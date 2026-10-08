@@ -65,7 +65,7 @@ export default async function RequestStatusPage({
         )}
       </div>
 
-      <Link href="/" className="text-sm text-blue-700 hover:underline">← Back to availability</Link>
+      <Link href="/" className="text-sm text-brand-700 hover:underline">← Back to availability</Link>
     </div>
   );
 }

@@ -152,7 +152,7 @@ export function RequestForm({ initialDate }: { initialDate: string }) {
                   disabled
                     ? "cursor-not-allowed border-zinc-200 bg-zinc-50 opacity-60"
                     : String(r.id) === f.roomId
-                      ? "cursor-pointer border-blue-500 bg-blue-50 ring-2 ring-blue-200"
+                      ? "cursor-pointer border-brand-600 bg-brand-50 ring-2 ring-accent-400"
                       : "cursor-pointer border-zinc-200 hover:border-zinc-400"
                 }`}
               >

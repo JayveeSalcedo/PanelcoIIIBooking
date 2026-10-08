@@ -31,14 +31,14 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <Link
             key={t.id}
             href={`/admin?tab=${t.id}`}
-            className={`rounded-full px-3 py-1 text-sm ${t.id === tab ? "bg-zinc-900 text-white" : "bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50"}`}
+            className={`rounded-full px-3 py-1 text-sm ${t.id === tab ? "bg-brand-700 text-white ring-2 ring-accent-400" : "bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50"}`}
           >
             {t.label}
           </Link>
         ))}
       </div>
 
-      {sp.msg && <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-900">{sp.msg}</div>}
+      {sp.msg && <div className="rounded-lg border border-brand-200 bg-brand-50 px-4 py-2 text-sm text-brand-900">{sp.msg}</div>}
 
       {list.length === 0 && <p className="py-10 text-center text-sm text-zinc-500">Nothing here.</p>}
 
