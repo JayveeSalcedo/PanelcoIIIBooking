@@ -19,12 +19,22 @@ const BADGE = {
 
 const HOUR = 3_600_000;
 
-export function RequestForm({ initialDate, startTime, endTime }: { initialDate: string; startTime: string; endTime: string }) {
+export function RequestForm({
+  initialDate,
+  startTime,
+  endTime,
+  roomId = "",
+}: {
+  initialDate: string;
+  startTime: string;
+  endTime: string;
+  roomId?: string;
+}) {
   const [state, formAction, submitting] = useActionState(submitRequest, {});
   const [f, setF] = useState<Fields>({
     eventType: "", title: "", department: "",
     startDate: initialDate, startTime, endDate: initialDate, endTime,
-    roomId: "", pax: "", requestedBy: "", contact: "", remarks: "",
+    roomId, pax: "", requestedBy: "", contact: "", remarks: "",
   });
   const [rooms, setRooms] = useState<SlotRoom[] | null>(null);
   const [slotError, setSlotError] = useState<string | null>(null);

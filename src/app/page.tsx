@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { SlotButton } from "@/components/SlotButton";
 import { StatusBadge } from "@/components/StatusBadge";
 import { listRooms, overlapping } from "@/lib/bookings";
 import { DAY_END_HOUR, DAY_START_HOUR } from "@/lib/constants";
-import { addDays, fmtDate, fmtRange, isDateStr, localDate, toInstant } from "@/lib/time";
+import { addDays, fmtDate, fmtRange, fmtTime, isDateStr, localDate, toInstant } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
 const pad = (n: number) => String(n).padStart(2, "0");
+const HOUR = 3_600_000;
 
 export default async function AvailabilityPage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
   const { date: dateParam } = await searchParams;
@@ -21,6 +23,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
 
   const [rooms, dayBookings] = await Promise.all([listRooms(), overlapping(dayStart, dayEnd)]);
   const hours = Array.from({ length: DAY_END_HOUR - DAY_START_HOUR }, (_, i) => DAY_START_HOUR + i);
+  const now = Date.now();
 
   return (
     <div className="space-y-6">
@@ -45,6 +48,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
         <Legend className="bg-white ring-zinc-300">Available</Legend>
         <Legend className="bg-amber-200 ring-amber-400">Pending approval</Legend>
         <Legend className="bg-emerald-500 ring-emerald-600">Booked</Legend>
+        <span className="text-zinc-500">Click an empty hour to request that room.</span>
       </div>
 
       <div className="card overflow-x-auto">
@@ -71,6 +75,26 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
                   {hours.map((h, i) => (
                     <div key={h} className="absolute inset-y-0 border-l border-zinc-100" style={{ left: `${(i / hours.length) * 100}%` }} />
                   ))}
+                  {hours.map((h, i) => {
+                    const s = winStart + i * HOUR;
+                    const e = s + HOUR;
+                    // Only whole free hours that haven't started yet can be requested.
+                    if (s < now || items.some((b) => b.startsAt.getTime() < e && b.endsAt.getTime() > s)) return null;
+                    const nextStart = Math.min(winEnd, ...items.map((b) => b.startsAt.getTime()).filter((t) => t >= e));
+                    return (
+                      <SlotButton
+                        key={h}
+                        style={{ left: `${(i / hours.length) * 100}%`, width: `${100 / hours.length}%` }}
+                        slot={{
+                          href: `/request?date=${date}&start=${pad(h)}:00&end=${pad(h + 1)}:00&room=${room.id}`,
+                          roomName: room.name,
+                          dateLabel: fmtDate(date),
+                          timeLabel: `${fmtTime(new Date(s))} – ${fmtTime(new Date(e))}`,
+                          freeUntil: fmtTime(new Date(nextStart)),
+                        }}
+                      />
+                    );
+                  })}
                   {items.map((b) => {
                     const s = Math.max(b.startsAt.getTime(), winStart);
                     const e = Math.min(b.endsAt.getTime(), winEnd);
