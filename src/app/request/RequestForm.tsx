@@ -112,18 +112,18 @@ export function RequestForm({ initialDate }: { initialDate: string }) {
             </span>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label" htmlFor="startDate">Start date</label>
             <input id="startDate" name="startDate" type="date" required value={f.startDate} onChange={set("startDate")} className="input" />
           </div>
           <div>
-            <label className="label" htmlFor="startTime">Start time</label>
-            <input id="startTime" name="startTime" type="time" required value={f.startTime} onChange={set("startTime")} className="input" />
-          </div>
-          <div>
             <label className="label" htmlFor="endDate">End date</label>
             <input id="endDate" name="endDate" type="date" required min={f.startDate} value={f.endDate} onChange={set("endDate")} className="input" />
+          </div>
+          <div>
+            <label className="label" htmlFor="startTime">Start time</label>
+            <input id="startTime" name="startTime" type="time" required value={f.startTime} onChange={set("startTime")} className="input" />
           </div>
           <div>
             <label className="label" htmlFor="endTime">End time</label>
