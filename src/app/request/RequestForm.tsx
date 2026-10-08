@@ -13,7 +13,7 @@ type Fields = Record<
 
 const BADGE = {
   free: ["Available", "bg-emerald-100 text-emerald-800"],
-  pending: ["Has pending request", "bg-amber-100 text-amber-800"],
+  pending: ["Pending approval", "bg-amber-100 text-amber-800"],
   booked: ["Booked", "bg-rose-100 text-rose-800"],
 } as const;
 
@@ -76,7 +76,7 @@ export function RequestForm({ initialDate, startTime, endTime }: { initialDate: 
   const end = toInstant(f.endDate, f.endTime);
   const pax = Number(f.pax) || 0;
 
-  const unavailable = (r: SlotRoom) => r.availability === "booked" || (r.capacity != null && pax > r.capacity);
+  const unavailable = (r: SlotRoom) => r.availability !== "free" || (r.capacity != null && pax > r.capacity);
   const selected = rooms?.find((r) => String(r.id) === f.roomId);
   const roomOk = !!selected && !unavailable(selected);
 
@@ -189,7 +189,7 @@ export function RequestForm({ initialDate, startTime, endTime }: { initialDate: 
                   <ul className="mt-2 space-y-0.5 text-xs text-zinc-600">
                     {r.conflicts.map((c, i) => (
                       <li key={i}>
-                        {c.status === "approved" ? "Booked" : "Pending"}: {c.title} ({c.department}) — {c.when}
+                        {c.status === "approved" ? "Booked" : "Pending approval"}: {c.title} ({c.department}) — {c.when}
                       </li>
                     ))}
                   </ul>
@@ -200,7 +200,8 @@ export function RequestForm({ initialDate, startTime, endTime }: { initialDate: 
         </div>
         {rooms?.some((r) => r.availability === "pending") && (
           <p className="text-xs text-zinc-500">
-            Rooms with a pending request can still be requested; the approver will decide which one goes ahead.
+            Rooms marked &ldquo;Pending approval&rdquo; are on hold for another request at this time and can&apos;t be requested
+            unless that request is rejected or cancelled.
           </p>
         )}
       </section>

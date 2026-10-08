@@ -57,10 +57,12 @@ body {
 }
 
 @media print {
+  /* No page margin leaves browsers no room for their URL/title header and footer; the body supplies the margin instead. */
   @page {
-    margin: 1.5cm;
+    margin: 0;
   }
   body {
     @apply bg-white;
+    padding: 1.5cm;
   }
 }

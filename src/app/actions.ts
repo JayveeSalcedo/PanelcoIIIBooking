@@ -91,8 +91,14 @@ export async function submitRequest(_prev: RequestFormState, form: FormData): Pr
   if (room.capacity != null && pax > room.capacity)
     return fail(`${room.name} holds up to ${room.capacity} pax. Choose a larger room.`);
 
-  const taken = await overlapping(range.start, range.end, { roomId: room.id, statuses: ["approved"] });
-  if (taken.length) return fail(`${room.name} is already booked during that time. Choose another room or time.`);
+  // A pending request holds the room until the approver decides, so it blocks new requests too.
+  const taken = await overlapping(range.start, range.end, { roomId: room.id });
+  if (taken.some((b) => b.status === "approved"))
+    return fail(`${room.name} is already booked during that time. Choose another room or time.`);
+  if (taken.length)
+    return fail(
+      `${room.name} already has a request for that time that is waiting for approval. Choose another room or time, or check again later if it is rejected.`,
+    );
 
   const ref = newRef();
   const db = await getDb();
