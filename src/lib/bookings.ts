@@ -88,3 +88,20 @@ export async function listBookings(filter: "pending" | "upcoming" | "all"): Prom
   }
   return base.orderBy(desc(bookings.createdAt)).limit(300);
 }
+
+/** Bookings whose start falls in [start, end), oldest first, optionally limited to some statuses. */
+export async function bookingsStartingBetween(start: Date, end: Date, statuses?: Status[]): Promise<BookingWithRoom[]> {
+  const db = await getDb();
+  return db
+    .select(bookingSelect())
+    .from(bookings)
+    .innerJoin(rooms, eq(rooms.id, bookings.roomId))
+    .where(
+      and(
+        gte(bookings.startsAt, start),
+        lt(bookings.startsAt, end),
+        statuses ? inArray(bookings.status, statuses) : undefined,
+      ),
+    )
+    .orderBy(asc(bookings.startsAt), asc(bookings.id));
+}
