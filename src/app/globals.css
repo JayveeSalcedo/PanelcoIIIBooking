@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  @apply bg-zinc-50 text-zinc-900;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility card {
+  @apply rounded-xl border border-zinc-200 bg-white shadow-sm;
+}
+
+@utility label {
+  @apply mb-1 block text-sm font-medium text-zinc-700;
+}
+
+@utility input {
+  @apply w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-zinc-100;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-1 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-blue-600 text-white hover:bg-blue-700;
+}
+
+@utility btn-secondary {
+  @apply btn border border-zinc-300 bg-white text-zinc-800 hover:bg-zinc-50;
+}
+
+@utility btn-success {
+  @apply btn bg-emerald-600 text-white hover:bg-emerald-700;
+}
+
+@utility btn-danger {
+  @apply btn bg-rose-600 text-white hover:bg-rose-700;
 }

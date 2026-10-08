@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Room Booking
 
-## Getting Started
+Request and approval system for Conference Room 1 & 2, AMA Hall, Staff House and the AM/FM Training Room.
 
-First, run the development server:
+- **Availability** (`/`): day timeline of every room — free, pending, booked.
+- **Request a room** (`/request`): open form (no login). Rooms update live as you pick dates/times;
+  booked rooms and rooms too small for the pax are disabled. Multi-day events supported.
+- **Check status** (`/status`, `/r/<ref>`): requesters track and cancel with their reference number.
+- **Approver** (`/admin`): password-protected. Approve / reject (reason required) pending requests,
+  cancel approved ones, and edit rooms (capacity, active, order) under **Rooms**.
+
+Rules: a time slot can't be requested if the room is already **approved** for an overlapping time.
+Overlapping **pending** requests are allowed and flagged to the approver; once one is approved the others
+can't be approved. Times are in Asia/Manila (`src/lib/time.ts`).
+
+## Run locally
 
 ```bash
+npm install
+cp .env.example .env.local   # set ADMIN_PASSWORD
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+With no `DATABASE_URL`, an embedded Postgres (PGlite) is stored in `./.pglite`. Delete that folder to reset.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push this folder to a GitHub repo and import it in Vercel.
+2. In the project, **Storage → Create → Neon (Postgres)** and connect it — this sets `DATABASE_URL`.
+   Pick the Singapore region (`aws-ap-southeast-1`) to match the functions region in `vercel.json` (`sin1`).
+3. Add env var `ADMIN_PASSWORD` (Settings → Environment Variables).
+4. Deploy. Tables and the five default rooms are created automatically on first request.
