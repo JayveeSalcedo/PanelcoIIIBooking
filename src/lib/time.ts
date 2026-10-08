@@ -3,7 +3,7 @@ export const TZ = "Asia/Manila";
 export const TZ_OFFSET = "+08:00";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const TIME_RE = /^\d{2}:\d{2}$/;
+const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/; // some mobile browsers include seconds
 
 export function isDateStr(s: unknown): s is string {
   return typeof s === "string" && DATE_RE.test(s) && !isNaN(Date.parse(`${s}T00:00:00Z`));
@@ -12,7 +12,7 @@ export function isDateStr(s: unknown): s is string {
 /** Local date ("YYYY-MM-DD") + time ("HH:mm") → instant. */
 export function toInstant(date: string, time: string): Date | null {
   if (!isDateStr(date) || !TIME_RE.test(time)) return null;
-  const d = new Date(`${date}T${time}:00${TZ_OFFSET}`);
+  const d = new Date(`${date}T${time.slice(0, 5)}:00${TZ_OFFSET}`);
   return isNaN(d.getTime()) ? null : d;
 }
 
@@ -29,6 +29,12 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   year: "numeric",
 });
+const hhmmFmt = new Intl.DateTimeFormat("en-GB", {
+  timeZone: TZ,
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
 const timeFmt = new Intl.DateTimeFormat("en-US", {
   timeZone: TZ,
   hour: "numeric",
@@ -38,6 +44,11 @@ const timeFmt = new Intl.DateTimeFormat("en-US", {
 /** Instant → local "YYYY-MM-DD". */
 export function localDate(d: Date = new Date()): string {
   return isoDateFmt.format(d);
+}
+
+/** Instant → local "HH:mm". */
+export function localTime(d: Date): string {
+  return hhmmFmt.format(d);
 }
 
 export function addDays(date: string, n: number): string {

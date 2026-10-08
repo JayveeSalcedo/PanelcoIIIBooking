@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { checkAvailability, submitRequest, type SlotRoom } from "@/app/actions";
 import { EVENT_TYPES } from "@/lib/constants";
-import { fmtDuration, toInstant } from "@/lib/time";
+import { fmtDuration, localDate, localTime, toInstant } from "@/lib/time";
 
 type Fields = Record<
   | "eventType" | "title" | "department" | "startDate" | "startTime" | "endDate" | "endTime"
@@ -17,11 +17,13 @@ const BADGE = {
   booked: ["Booked", "bg-rose-100 text-rose-800"],
 } as const;
 
-export function RequestForm({ initialDate }: { initialDate: string }) {
+const HOUR = 3_600_000;
+
+export function RequestForm({ initialDate, startTime, endTime }: { initialDate: string; startTime: string; endTime: string }) {
   const [state, formAction, submitting] = useActionState(submitRequest, {});
   const [f, setF] = useState<Fields>({
     eventType: "", title: "", department: "",
-    startDate: initialDate, startTime: "08:00", endDate: initialDate, endTime: "17:00",
+    startDate: initialDate, startTime, endDate: initialDate, endTime,
     roomId: "", pax: "", requestedBy: "", contact: "", remarks: "",
   });
   const [rooms, setRooms] = useState<SlotRoom[] | null>(null);
@@ -32,8 +34,18 @@ export function RequestForm({ initialDate }: { initialDate: string }) {
     const value = e.target.value;
     setF((prev) => {
       const next = { ...prev, [k]: value };
-      // Keep the end date from falling before the start date.
-      if (k === "startDate" && (!next.endDate || next.endDate < value)) next.endDate = value;
+      // Moving the start moves the end with it, keeping the same duration (1 hour if there was none).
+      if (k === "startDate" || k === "startTime") {
+        const oldStart = toInstant(prev.startDate, prev.startTime);
+        const oldEnd = toInstant(prev.endDate, prev.endTime);
+        const newStart = toInstant(next.startDate, next.startTime);
+        if (newStart) {
+          const span = oldStart && oldEnd && oldEnd > oldStart ? oldEnd.getTime() - oldStart.getTime() : HOUR;
+          const newEnd = new Date(newStart.getTime() + span);
+          next.endDate = localDate(newEnd);
+          next.endTime = localTime(newEnd);
+        }
+      }
       return next;
     });
   };
