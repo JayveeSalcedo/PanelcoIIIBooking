@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cancelByRef } from "@/app/actions";
+import { RefModal } from "@/components/RefModal";
 import { BookingDetails } from "@/components/BookingDetails";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getByRef } from "@/lib/bookings";
@@ -31,12 +32,7 @@ export default async function RequestStatusPage({
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      {isNew && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-          Request submitted. Save your reference number <strong className="font-mono">{b.ref}</strong> to check the status
-          later, or bookmark this page.
-        </div>
-      )}
+      {isNew && <RefModal refNo={b.ref} />}
 
       <div className="card space-y-5 p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
